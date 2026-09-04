@@ -1,5 +1,9 @@
 # LLM Inference API
 
+<!-- BEGIN: REPO HERO -->
+![llm-inference-api — hero generated locally on the GPU stack](assets/repo-hero.png)
+<!-- END: REPO HERO -->
+
 > Production-ready **local LLM inference gateway** — OpenAI-compatible endpoints,
 > multi-GPU routing, load balancing, auth, and usage metering for your own
 > Ollama / ComfyUI stack.
