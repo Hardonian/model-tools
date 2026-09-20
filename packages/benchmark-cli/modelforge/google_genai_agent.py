@@ -9,7 +9,7 @@ Provides native tool definitions and dispatchers compatible with:
 import json
 from typing import Any
 
-from modelforge.mcp_server import handle_tool_call, TOOLS
+from modelforge.mcp_server import TOOLS, handle_tool_call
 
 
 def get_genai_function_declarations() -> list[dict[str, Any]]:

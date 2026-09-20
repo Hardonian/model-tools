@@ -6,13 +6,12 @@ across multi-node Dynamo topologies.
 
 from __future__ import annotations
 
-import math
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Literal, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 # Standard network fabric characteristics (Bandwidth in GB/s, P2P latency in microseconds)
-FABRIC_PROFILES: Dict[str, Dict[str, float]] = {
+FABRIC_PROFILES: dict[str, dict[str, float]] = {
     "infiniband_ndr": {
         "bandwidth_gbps": 400.0,
         "bandwidth_gbytes_sec": 50.0,
@@ -67,7 +66,7 @@ class MultiNodeDistributedHarness:
         self.fabric = fabric if fabric in FABRIC_PROFILES else "infiniband_ndr"
         self.profile = FABRIC_PROFILES[self.fabric]
 
-    def profile_network_topology(self) -> Dict[str, Any]:
+    def profile_network_topology(self) -> dict[str, Any]:
         """Calculates topology parameters, bus bandwidth, and maximum recommended parallelism."""
         bus_bw = self.profile["bandwidth_gbytes_sec"] * self.profile["allreduce_efficiency"]
         # TP > 8 across nodes without NVLink Network induces severe communication stalls
@@ -96,7 +95,7 @@ class MultiNodeDistributedHarness:
         self,
         message_size_mb: float = 64.0,
         iterations: int = 10,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Simulates or benchmarks ring-allreduce latency and bus bandwidth.
 
         T_allreduce = 2 * ((P - 1) / P) * (M / S) + 2 * (P - 1) * alpha
@@ -131,7 +130,7 @@ class MultiNodeDistributedHarness:
         batch_size: int = 16,
         prompt_tokens: int = 1024,
         output_tokens: int = 256,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Executes a full multi-node distributed benchmark evaluation."""
         topology = self.profile_network_topology()
         allreduce = self.measure_allreduce(message_size_mb=128.0)
@@ -162,5 +161,5 @@ class MultiNodeDistributedHarness:
             "effective_throughput_tok_s": round(actual_throughput, 1),
             "communication_overhead_pct": round(comm_pct, 2),
             "scaling_efficiency_pct": round(scaling_efficiency, 1),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }

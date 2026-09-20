@@ -245,9 +245,9 @@ def test_mcp_export_bigquery_telemetry_schema():
 
 def test_google_genai_agent_interoperability():
     from modelforge.google_genai_agent import (
-        get_genai_function_declarations,
-        export_vertex_extension_spec,
         dispatch_genai_tool_call,
+        export_vertex_extension_spec,
+        get_genai_function_declarations,
     )
 
     # Test FunctionDeclarations format for google.genai

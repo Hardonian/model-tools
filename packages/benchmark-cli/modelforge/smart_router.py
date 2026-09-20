@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import time
 import uuid
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
 class SmartRouterClient:
@@ -17,7 +17,7 @@ class SmartRouterClient:
 
     def __init__(self, router_url: str = "http://localhost:3000/api/v1/router") -> None:
         self.router_url = router_url
-        self.backends: List[Dict[str, Any]] = [
+        self.backends: list[dict[str, Any]] = [
             {
                 "id": "worker-h100-east-01",
                 "model": "meta-llama/Llama-3-70B",
@@ -34,7 +34,7 @@ class SmartRouterClient:
             },
         ]
 
-    def route_request(self, prompt: str, model: str = "meta-llama/Llama-3-70B") -> Dict[str, Any]:
+    def route_request(self, prompt: str, model: str = "meta-llama/Llama-3-70B") -> dict[str, Any]:
         """Calculates fast-path route with prefix-cache affinity and measures overhead."""
         start_ns = time.perf_counter_ns()
         prefix_chunk = prompt.strip()[:64]
@@ -73,7 +73,7 @@ class SmartRouterClient:
             "spot_drain_migrated": False,
         }
 
-    def trigger_spot_drain(self, worker_id: str, reason: str = "spot_termination_notice") -> Dict[str, Any]:
+    def trigger_spot_drain(self, worker_id: str, reason: str = "spot_termination_notice") -> dict[str, Any]:
         """Simulates immediate graceful spot drain with zero dropped requests."""
         target = next((b for b in self.backends if b["id"] == worker_id), None)
         if not target:

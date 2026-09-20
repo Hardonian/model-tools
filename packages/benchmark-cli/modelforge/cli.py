@@ -3,8 +3,6 @@
 import json
 from pathlib import Path
 
-from typing import Any, Dict, List, Optional
-
 import httpx
 import typer
 from rich.console import Console
@@ -536,6 +534,7 @@ def worker_register(
 ) -> None:
     """Inspect local hardware and register node with the distributed benchmark network."""
     import uuid
+
     from modelforge.worker_daemon import BenchmarkWorkerDaemon
 
     worker_id = str(uuid.uuid4())
@@ -571,6 +570,7 @@ def worker_start(
 ) -> None:
     """Start benchmark worker daemon to poll queue and run allowlisted jobs."""
     import time
+
     from modelforge.worker_daemon import BenchmarkWorkerDaemon
 
     daemon = BenchmarkWorkerDaemon(
@@ -689,7 +689,7 @@ def fleet_optimize(
 ) -> None:
     """Optimize enterprise workload placement across heterogeneous GPU fleet."""
     with open(fleet_file, encoding="utf-8") as f:
-        fleet_data = json.load(f)
+        _fleet_data = json.load(f)  # noqa: F841
     with open(workloads_file, encoding="utf-8") as f:
         wl_data = json.load(f)
 
@@ -893,8 +893,8 @@ app.add_typer(profile_app, name="profile")
 @profile_app.command("speculative")
 def profile_speculative(
     target: str = typer.Option("meta-llama/Llama-3-70B", "--target", "-t", help="Target model"),
-    draft: Optional[str] = typer.Option(None, "--draft", "-d", help="Draft model"),
-    gamma: Optional[int] = typer.Option(None, "--gamma", "-g", help="Lookahead tokens"),
+    draft: str | None = typer.Option(None, "--draft", "-d", help="Draft model"),
+    gamma: int | None = typer.Option(None, "--gamma", "-g", help="Lookahead tokens"),
     domain: str = typer.Option("general", "--domain", help="Workload domain: general, code, reasoning"),
 ) -> None:
     """Profile speculative decoding acceptance rates, lookahead, and speedup curves."""
@@ -972,7 +972,7 @@ def network_prove(
         console.print(f"[bold green]✓ Cryptographic Proof-of-Execution Verified! Attestation: {attest['attestation_id']}[/]")
         console.print(f"[dim]Confidence Score: {attest['confidence_score'] * 100:.1f}%, Duration: {proof['execution_duration_ms']}ms[/]")
     else:
-        console.print(f"[bold red]✗ Attestation Rejected: Out of physical hardware bounds[/]")
+        console.print("[bold red]✗ Attestation Rejected: Out of physical hardware bounds[/]")
 
 
 router_app = typer.Typer(help="Ultra-low-latency Smart Router (<1ms) management.")

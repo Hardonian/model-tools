@@ -10,18 +10,18 @@ import hashlib
 import hmac
 import math
 import uuid
-from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional
+from datetime import UTC, datetime
+from typing import Any
 
 
 class WorkerNetworkManager:
     """Coordinates remote benchmark worker nodes and proof-of-execution lifecycle."""
 
-    def __init__(self, worker_id: Optional[str] = None, hardware_uuid: Optional[str] = None) -> None:
+    def __init__(self, worker_id: str | None = None, hardware_uuid: str | None = None) -> None:
         self.worker_id = worker_id or f"worker-{uuid.uuid4().hex[:8]}"
         self.hardware_uuid = hardware_uuid or f"hw-{uuid.uuid4().hex[:12]}"
 
-    def register_worker(self, device: str = "nvidia-h100-80gb", vram_gb: int = 80) -> Dict[str, Any]:
+    def register_worker(self, device: str = "nvidia-h100-80gb", vram_gb: int = 80) -> dict[str, Any]:
         """Registers worker on the decentralized network."""
         return {
             "worker_id": self.worker_id,
@@ -29,10 +29,10 @@ class WorkerNetworkManager:
             "device": device,
             "vram_gb": vram_gb,
             "status": "registered",
-            "registered_at": datetime.now(timezone.utc).isoformat(),
+            "registered_at": datetime.now(UTC).isoformat(),
         }
 
-    def request_challenge(self, target_hardware: str = "nvidia-h100-80gb", iterations: int = 5000) -> Dict[str, Any]:
+    def request_challenge(self, target_hardware: str = "nvidia-h100-80gb", iterations: int = 5000) -> dict[str, Any]:
         """Requests a cryptographic benchmark challenge from the network consensus."""
         challenge_id = f"chal-{uuid.uuid4().hex[:8]}"
         nonce = uuid.uuid4().hex + uuid.uuid4().hex
@@ -51,10 +51,10 @@ class WorkerNetworkManager:
             "matrix_dim_k": 8192,
             "expected_min_duration_ms": min_ms,
             "expected_max_duration_ms": max_ms,
-            "issued_at": datetime.now(timezone.utc).isoformat(),
+            "issued_at": datetime.now(UTC).isoformat(),
         }
 
-    def solve_challenge(self, challenge: Dict[str, Any], measured_duration_ms: Optional[float] = None) -> Dict[str, Any]:
+    def solve_challenge(self, challenge: dict[str, Any], measured_duration_ms: float | None = None) -> dict[str, Any]:
         """Executes the benchmark challenge and synthesizes verifiable ProofOfExecution."""
         duration = measured_duration_ms or (
             (challenge["expected_min_duration_ms"] + challenge["expected_max_duration_ms"]) / 2.0
@@ -80,10 +80,10 @@ class WorkerNetworkManager:
             "raw_latency_samples": samples,
             "compute_digest": compute_digest,
             "worker_signature": worker_sig,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
-    def verify_attestation(self, challenge: Dict[str, Any], proof: Dict[str, Any]) -> Dict[str, Any]:
+    def verify_attestation(self, challenge: dict[str, Any], proof: dict[str, Any]) -> dict[str, Any]:
         """Validates proof against physical hardware constraints and issues attestation."""
         dur = proof["execution_duration_ms"]
         is_valid = challenge["expected_min_duration_ms"] <= dur <= challenge["expected_max_duration_ms"]
@@ -95,6 +95,6 @@ class WorkerNetworkManager:
             "proof_id": proof["proof_id"],
             "verified": is_valid,
             "confidence_score": 0.99 if is_valid else 0.0,
-            "attestation_signature": hashlib.sha256(f"{attestation_id}:verified:{dur}".encode("utf-8")).hexdigest() if is_valid else "REJECTED_OUT_OF_BOUNDS",
-            "issued_at": datetime.now(timezone.utc).isoformat(),
+            "attestation_signature": hashlib.sha256(f"{attestation_id}:verified:{dur}".encode()).hexdigest() if is_valid else "REJECTED_OUT_OF_BOUNDS",
+            "issued_at": datetime.now(UTC).isoformat(),
         }

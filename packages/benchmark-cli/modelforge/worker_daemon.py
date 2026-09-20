@@ -10,8 +10,7 @@ from __future__ import annotations
 import hashlib
 import logging
 import time
-import uuid
-from typing import Any, Dict, Optional
+from typing import Any
 
 import httpx
 
@@ -29,10 +28,10 @@ class BenchmarkWorkerDaemon:
         self,
         worker_id: str,
         token: str,
-        client: Optional[ModelForgeClient] = None,
+        client: ModelForgeClient | None = None,
         base_url: str = "http://localhost:3000/api/v1",
         private_mode: bool = False,
-        organization_id: Optional[str] = None,
+        organization_id: str | None = None,
     ):
         self.worker_id = worker_id
         self.token = token
@@ -42,7 +41,7 @@ class BenchmarkWorkerDaemon:
         self.organization_id = organization_id
         self.is_running = False
 
-    def register_capabilities(self, name: Optional[str] = None) -> Dict[str, Any]:
+    def register_capabilities(self, name: str | None = None) -> dict[str, Any]:
         """Register or update worker capability profile with control plane."""
         env = detect_system_environment()
         accel = env.accelerators[0] if env.accelerators else None
@@ -100,7 +99,7 @@ class BenchmarkWorkerDaemon:
         except Exception:
             return False
 
-    def poll_job(self) -> Optional[Dict[str, Any]]:
+    def poll_job(self) -> dict[str, Any] | None:
         """Poll the queue for the next eligible job matching worker capabilities."""
         try:
             resp = httpx.post(
@@ -119,7 +118,7 @@ class BenchmarkWorkerDaemon:
             logger.debug(f"Poll check: {e}")
         return None
 
-    def execute_job(self, job: Dict[str, Any]) -> Dict[str, Any]:
+    def execute_job(self, job: dict[str, Any]) -> dict[str, Any]:
         """Declaratively execute benchmark job with strict sandboxing and allowlisting."""
         allowed_runtimes = {"vllm", "tensorrt-llm", "llama.cpp", "sglang", "simulation"}
         runtime = job.get("runtime", "simulation")

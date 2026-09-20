@@ -1,4 +1,5 @@
 from typer.testing import CliRunner
+
 from modelforge.cli import app
 
 runner = CliRunner()

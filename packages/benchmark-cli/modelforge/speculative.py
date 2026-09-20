@@ -6,10 +6,10 @@ Empirical acceptance rate and speedup benchmarks across draft-target model pairs
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 # Empirical profiles for verified open-weights draft-target pairs
-REFERENCE_PAIRS: Dict[str, Dict[str, Any]] = {
+REFERENCE_PAIRS: dict[str, dict[str, Any]] = {
     "meta-llama/Llama-3-70B": {
         "draft_model": "meta-llama/Llama-3-8B",
         "target_params_b": 70.6,
@@ -43,10 +43,10 @@ class SpeculativeProfiler:
     @staticmethod
     def profile(
         target_model: str,
-        draft_model: Optional[str] = None,
-        lookahead_gamma: Optional[int] = None,
+        draft_model: str | None = None,
+        lookahead_gamma: int | None = None,
         domain: str = "general",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         ref = REFERENCE_PAIRS.get(target_model, {
             "draft_model": draft_model or "generic-draft",
             "target_params_b": 70.0,
@@ -96,7 +96,7 @@ class SpeculativeProfiler:
         }
 
     @staticmethod
-    def sweep(target_model: str) -> List[Dict[str, Any]]:
+    def sweep(target_model: str) -> list[dict[str, Any]]:
         results = []
         for g in range(1, 11):
             p = SpeculativeProfiler.profile(target_model, lookahead_gamma=g)

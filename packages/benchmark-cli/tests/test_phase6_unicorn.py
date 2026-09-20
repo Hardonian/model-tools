@@ -1,6 +1,5 @@
 """Tests for Phase 6 2026 Planetary Scale & Autonomous Mesh features."""
 
-import pytest
 from typer.testing import CliRunner
 
 from modelforge.cli import app
