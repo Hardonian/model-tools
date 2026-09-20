@@ -10,7 +10,7 @@ LOG_LEVEL = "INFO"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "ai_lab_audit"
+database_name = "drift_db"
 database_id = "placeholder-id"
 
 [triggers]

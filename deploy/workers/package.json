@@ -1,0 +1,8 @@
+{
+  "name": "llm-inference-api",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "itty-router": "^4.0.0"
+  }
+}
