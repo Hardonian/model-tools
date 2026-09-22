@@ -70,6 +70,19 @@ cd inference-api && uv sync && uv run python main.py
 cd ollama-router && uv sync && uv run uvicorn app.main:app
 ```
 
+
+## Related Repos
+
+### Platform Monorepos
+- [autopilot](https://github.com/Hardonian/autopilot) — ops, finops, growth, support
+- [agent-infra](https://github.com/Hardonian/agent-infra) — control-plane, mission-ledger, agent-mesh, mcpwall
+- [agent-edge](https://github.com/Hardonian/agent-edge) — mesh-edge, pcap
+
+### Commercial
+- [hardonia-store](https://github.com/Hardonian/hardonia-store) — storefront
+- [comfyui-workflow-packs](https://github.com/Hardonian/comfyui-workflow-packs) — ComfyUI workflow products
+- [content-repo](https://github.com/Hardonian/content-repo) — blog posts and email sequences
+
 ## License
 
 Each subproject retains its original license. See `LICENSE` files in each directory.
